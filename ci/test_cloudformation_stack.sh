@@ -68,9 +68,8 @@ else
     exit 1
 fi
 
-if [ -f $TESTDIR/${config_global_qsname}.html ]; then
+if [ -f ${config_global_qsname}.html ]; then
 	echo "Uploading report ${config_global_qsname}.html"
-	REPORTFILE=$TESTDIR/${config_global_qsname}.html
-	aws s3 cp $REPORTFILE s3://quickstart-ci-reports/
+	aws s3 cp ${config_global_qsname}.html s3://quickstart-ci-reports/
 fi
 
