@@ -24,7 +24,8 @@ with open(yml_configuration, 'r') as ciconf:
 
 global_qsname=ciyml['global']['qsname']
 global_reporting=ciyml['global']['qsname']
-reporting_html=global_qsname + ".html"
+reporting_html="/root/" + global_qsname + ".html"
+
 
 
 if ( ciyml['global']['qsenv'] == "prod"):
