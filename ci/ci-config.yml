@@ -2,7 +2,7 @@ global:
   qsname: qs_puppet
   qsenv: dev
   reporting: true
-  cis3bucket:  s3://quickstart-ci-bucket
+  cis3bucket: s3://quickstart-ci-bucket
   regions:
     - us-east-1
     - us-west-1
@@ -14,7 +14,11 @@ global:
     - ap-southeast-1
     - ap-southeast-2
     - ap-northeast-2
+ 
 tests:
-  qs_puppet:
-    template_file: Puppet-QuickStart.template
-    parameter_input: Puppet-QuickStart.json
+  qs_puppett1:
+    template_file: qs_puppet-example1.template
+    parameter_input: qs_puppet-exampleparms1.json
+  qs_puppett2:
+    template_file: qs_puppet-example2.template
+    parameter_input: qs_puppet-exampleparms2.json
