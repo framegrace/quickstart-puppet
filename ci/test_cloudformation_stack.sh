@@ -71,6 +71,6 @@ fi
 if [ -f /root/${config_global_qsname}.html ]; then
 	echo "Uploading report ${config_global_qsname}.html"
 	REPORTFILE=/root//${config_global_qsname}.html
-	aws s3 cp $REPORTFILE s3://quickstart-ci-reports/
-fi
+	aws s3 cp $REPORTFILE s3://quickstart-ci-reports/ --acl public-read
 
+fi
