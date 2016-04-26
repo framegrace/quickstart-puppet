@@ -1,5 +1,5 @@
 global:
-  qsname: qs_puppet
+  qsname: quickstart-puppet
   qsenv: dev
   reporting: true
   cis3bucket:  s3://quickstart-ci-bucket
