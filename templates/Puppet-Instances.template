@@ -72,33 +72,36 @@
                 "64" : "ami-69631053"
             }
         },
-        "WIN2012R2AMI"  : {
-            "us-east-1" : {
-                "64" : "ami-3586ac5f"
+        "AWSWinRegionMap": {
+            "ap-northeast-1": {
+                "WS2012R2": "ami-ff435e91"
             },
-            "us-west-2" : {
-                "64" : "ami-df8767bf"
+            "ap-northeast-2": {
+                "WS2012R2": "ami-c6de16a8"
             },
-            "us-west-1" : {
-                "64" : "ami-95fd8bf5"
+            "ap-southeast-1": {
+                "WS2012R2": "ami-63489d00"
             },
-            "eu-west-1" : {
-                "64" : "ami-8519a9f6"
+            "ap-southeast-2": {
+                "WS2012R2": "ami-a1f7d5c2"
             },
-            "eu-central-1" : {
-                "64" : "ami-5dd2c931"
+            "eu-central-1": {
+                "WS2012R2": "ami-3acf2f55"
             },
-            "ap-southeast-1" : {
-                "64" : "ami-9801cffb"
+            "eu-west-1": {
+                "WS2012R2": "ami-9ebb39ed"
             },
-            "ap-northeast-1" : {
-                "64" : "ami-14b8bc7a"
+            "sa-east-1": {
+                "WS2012R2": "ami-6efd7302"
             },
-            "sa-east-1"      : {
-                "64" : "ami-828e0dee"
+            "us-east-1": {
+                "WS2012R2": "ami-c8a9baa2"
             },
-            "ap-southeast-2" : {
-                "64" : "ami-db0a2db8"
+            "us-west-1": {
+                "WS2012R2": "ami-032f5063"
+            },
+            "us-west-2": {
+                "WS2012R2": "ami-87c037e7"
             }
         }
     },
@@ -417,11 +420,11 @@
             "Properties" : {
                 "ImageId" : {
                     "Fn::FindInMap" : [
-                        "WIN2012R2AMI",
+                        "AWSWinRegionMap",
                         {
                             "Ref" : "AWS::Region"
                         },
-                        "64"
+                        "WS2012R2"
                     ]
                 },
                 "InstanceType" : "t2.medium",
