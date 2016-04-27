@@ -352,7 +352,23 @@
                                 "waitAfterCompletion" : "0"
                             },
                             "c-init-quickstart-module"   : {
-                                "command" : "powershell.exe -command New-AWSQuickStartWaitHandle -Handle WindowsAgent",
+                                "command" : {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -Command \"",
+                                            "New-AWSQuickStartResourceSignal -Stack '",
+                                            {
+                                                "Ref": "AWS::StackName"
+                                            },
+                                            "' -Resource 'WindowsAgent' -Region '",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion" : "0"
                             },
                             "d-install-puppet-agent"     : {
