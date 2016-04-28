@@ -65,6 +65,9 @@
             "ap-northeast-1" : {
                 "64" : "ami-936d9d93"
             },
+            "ap-northeast-2" : {
+                "64" : "ami-86ae60e8"
+            },
             "sa-east-1"      : {
                 "64" : "ami-02952d6e"
             },
