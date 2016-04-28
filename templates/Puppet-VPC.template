@@ -68,7 +68,7 @@
                 "MapPublicIpOnLaunch" : "true",
                 "AvailabilityZone"    : {
                     "Fn::Select" : [
-                        0,
+                        1,
                         {
                             "Fn::GetAZs" : ""
                         }
