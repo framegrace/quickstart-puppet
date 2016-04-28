@@ -336,7 +336,7 @@
                                 "source" : "https://download.microsoft.com/download/3/F/D/3FD04B49-26F9-4D9A-8C34-4533B9D5B020/Win8.1AndW2K12R2-KB3066437-x64.msu"
                             },
                             "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/scripts/Set-PrimaryDnsSuffix.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
                             },
                             "c:\\cfn\\downloads\\GeoTrust_Global_CA.pem"             : {
                                 "source" : "https://www.geotrust.com/resources/root_certificates/certificates/GeoTrust_Global_CA.pem"
