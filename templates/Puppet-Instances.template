@@ -335,8 +335,8 @@
                             "c:\\cfn\\scripts\\New-LocalAdministrator.ps1" : {
                                 "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/New-LocalAdministrator.ps1"
                             },
-                            "c:\\cfn\\downloads\\Win8.1AndW2K12R2-KB3066437-x64.msu" : {
-                                "source" : "https://download.microsoft.com/download/3/F/D/3FD04B49-26F9-4D9A-8C34-4533B9D5B020/Win8.1AndW2K12R2-KB3066437-x64.msu"
+                            "c:\\cfn\\downloads\\Win8.1AndW2K12R2-KB3134758-x64.msu" : {
+                                "source" : "https://download.microsoft.com/download/2/C/6/2C6E1B4A-EBE5-48A6-B225-2D2058A9CEFB/Win8.1AndW2K12R2-KB3134758-x64.msu"
                             },
                             "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1"             : {
                                 "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
