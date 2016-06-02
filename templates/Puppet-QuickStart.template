@@ -1,62 +1,62 @@
 {
-    "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description"              : "(0020) - Step 1 of 3: This template deploys the AWS Puppet Quick Start. See the deployment guide at http://aws.amazon.com/quickstart for details. This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
-    "Parameters"               : {
-        "KeyPairName" : {
-            "Description" : "Public/private key pair",
-            "Type"        : "AWS::EC2::KeyPair::KeyName"
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "(0020) - Step 1 of 3: This template deploys the AWS Puppet Quick Start. See the deployment guide at http://aws.amazon.com/quickstart for details. This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters": {
+        "KeyPairName": {
+            "Description": "Public/private key pair",
+            "Type": "AWS::EC2::KeyPair::KeyName"
         },
-        "SubnetCIDR"  : {
-            "Description" : "CIDR block for the public subnet",
-            "Type"        : "String",
-            "Default"     : "10.0.0.0/19",
-            "AllowedPattern" : "[a-zA-Z0-9]+\\..+"
+        "SubnetCIDR": {
+            "Description": "CIDR block for the public subnet",
+            "Type": "String",
+            "Default": "10.0.0.0/19",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "RemoteAdminCIDR" : {
-            "Description" : "CIDR block or IP for SSH access",
-            "Type"        : "String",
-            "Default"     : "0.0.0.0/0",
-            "AllowedPattern" : "[a-zA-Z0-9]+\\..+"
+        "RemoteAdminCIDR": {
+            "Description": "CIDR block or IP for SSH access",
+            "Type": "String",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "VPCCIDR"         : {
-            "Description" : "CIDR block for the VPC",
-            "Type"        : "String",
-            "Default"     : "10.0.0.0/16",
-            "AllowedPattern" : "[a-zA-Z0-9]+\\..+"
+        "VPCCIDR": {
+            "Description": "CIDR block for the VPC",
+            "Type": "String",
+            "Default": "10.0.0.0/16",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "PuppetMasterIP"  : {
-            "Description" : "IP for the Puppet master",
-            "Type"        : "String",
-            "Default"     : "10.0.0.10"
+        "PuppetMasterIP": {
+            "Description": "IP for the Puppet master",
+            "Type": "String",
+            "Default": "10.0.0.10"
         },
-        "PuppetAgentLinuxIP" : {
-            "Description" : "IP for the Linux Puppet agent",
-            "Type"        : "String",
-            "Default"     : "10.0.0.11"
+        "PuppetAgentLinuxIP": {
+            "Description": "IP for the Linux Puppet agent",
+            "Type": "String",
+            "Default": "10.0.0.11"
         },
-        "PuppetAgentWindowsIP" : {
-            "Description" : "IP for the Windows Puppet agent",
-            "Type"        : "String",
-            "Default"     : "10.0.0.12"
+        "PuppetAgentWindowsIP": {
+            "Description": "IP for the Windows Puppet agent",
+            "Type": "String",
+            "Default": "10.0.0.12"
         }
     },
-    "Metadata"                 : {
-        "AWS::CloudFormation::Interface" : {
-            "ParameterGroups" : [
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
                 {
-                    "Label" : {
-                        "default" : "Security Configuration"
+                    "Label": {
+                        "default": "Security Configuration"
                     },
-                    "Parameters" : [
+                    "Parameters": [
                         "KeyPairName",
                         "RemoteAdminCIDR"
                     ]
                 },
                 {
-                    "Label" : {
-                        "default" : "Network Configuration"
+                    "Label": {
+                        "default": "Network Configuration"
                     },
-                    "Parameters" : [
+                    "Parameters": [
                         "VPCCIDR",
                         "SubnetCIDR",
                         "PuppetMasterIP",
@@ -65,89 +65,89 @@
                     ]
                 }
             ],
-            "ParameterLabels" : {
-                "KeyPairName" : {
-                    "default" : "Select a key pair:"
+            "ParameterLabels": {
+                "KeyPairName": {
+                    "default": "Select a key pair:"
                 },
-                "RemoteAdminCIDR" : {
-                    "default" : "Source IP for remote access (e.g., 1.1.1.1/32):"
+                "RemoteAdminCIDR": {
+                    "default": "Source IP for remote access (e.g., 1.1.1.1/32):"
                 },
-                "VPCCIDR"         : {
-                    "default" : "CIDR range for your VPC:"
+                "VPCCIDR": {
+                    "default": "CIDR range for your VPC:"
                 },
-                "SubnetCIDR"      : {
-                    "default" : "CIDR range for the subnet in your VPC:"
+                "SubnetCIDR": {
+                    "default": "CIDR range for the subnet in your VPC:"
                 },
-                "PuppetMasterIP"  : {
-                    "default" : "IP address for the Puppet master:"
+                "PuppetMasterIP": {
+                    "default": "IP address for the Puppet master:"
                 },
-                "PuppetAgentLinuxIP"   : {
-                    "default" : "IP address for the Linux Puppet agent:"
+                "PuppetAgentLinuxIP": {
+                    "default": "IP address for the Linux Puppet agent:"
                 },
-                "PuppetAgentWindowsIP"   : {
-                    "default" : "IP address for the Windows Puppet agent:"
+                "PuppetAgentWindowsIP": {
+                    "default": "IP address for the Windows Puppet agent:"
                 }
             }
         }
     },
-    "Resources"                : {
-        "VPCStack" : {
-            "Type" : "AWS::CloudFormation::Stack",
-            "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/quickstart-reference/puppet/latest/templates/Puppet-VPC.template",
-                "Parameters"  : {
-                    "KeyPairName" : {
-                        "Ref" : "KeyPairName"
+    "Resources": {
+        "VPCStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/puppet/latest/templates/Puppet-VPC.template",
+                "Parameters": {
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
                     },
-                    "SubnetCIDR"  : {
-                        "Ref" : "SubnetCIDR"
+                    "SubnetCIDR": {
+                        "Ref": "SubnetCIDR"
                     },
-                    "VPCCIDR"     : {
-                        "Ref" : "VPCCIDR"
+                    "VPCCIDR": {
+                        "Ref": "VPCCIDR"
                     },
-                    "PuppetMasterIP" : {
-                        "Ref" : "PuppetMasterIP"
+                    "PuppetMasterIP": {
+                        "Ref": "PuppetMasterIP"
                     },
-                    "PuppetAgentLinuxIP" : {
-                        "Ref" : "PuppetAgentLinuxIP"
+                    "PuppetAgentLinuxIP": {
+                        "Ref": "PuppetAgentLinuxIP"
                     },
-                    "PuppetAgentWindowsIP" : {
-                        "Ref" : "PuppetAgentWindowsIP"
+                    "PuppetAgentWindowsIP": {
+                        "Ref": "PuppetAgentWindowsIP"
                     }
                 }
             }
         },
-        "InstanceStack" : {
-            "Type" : "AWS::CloudFormation::Stack",
-            "Properties" : {
-                "TemplateURL" : "https://s3.amazonaws.com/quickstart-reference/puppet/latest/templates/Puppet-Instances.template",
-                "Parameters"  : {
-                    "KeyPairName" : {
-                        "Ref" : "KeyPairName"
+        "InstanceStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/puppet/latest/templates/Puppet-Instances.template",
+                "Parameters": {
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
                     },
-                    "SubnetId"    : {
-                        "Fn::GetAtt" : [
+                    "SubnetId": {
+                        "Fn::GetAtt": [
                             "VPCStack",
                             "Outputs.SubnetId"
                         ]
                     },
-                    "VPC"         : {
-                        "Fn::GetAtt" : [
+                    "VPC": {
+                        "Fn::GetAtt": [
                             "VPCStack",
                             "Outputs.VPC"
                         ]
                     },
-                    "VPCCIDR"     : {
-                        "Ref" : "VPCCIDR"
+                    "VPCCIDR": {
+                        "Ref": "VPCCIDR"
                     },
-                    "PuppetMasterIP" : {
-                        "Ref" : "PuppetMasterIP"
+                    "PuppetMasterIP": {
+                        "Ref": "PuppetMasterIP"
                     },
-                    "PuppetAgentLinuxIP" : {
-                        "Ref" : "PuppetAgentLinuxIP"
+                    "PuppetAgentLinuxIP": {
+                        "Ref": "PuppetAgentLinuxIP"
                     },
-                    "PuppetAgentWindowsIP" : {
-                        "Ref" : "PuppetAgentWindowsIP"
+                    "PuppetAgentWindowsIP": {
+                        "Ref": "PuppetAgentWindowsIP"
                     }
                 }
             }
