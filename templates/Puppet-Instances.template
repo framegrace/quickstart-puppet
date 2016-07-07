@@ -56,6 +56,10 @@
                 "US1404HVM": "ami-45975c2b",
                 "WS2012R2": "ami-082ee566"
             },
+            "ap-south-1": {
+                "US1404HVM": "ami-42569022",
+                "WS2012R2": "ami-8d0acfed"
+            },
             "ap-southeast-1": {
                 "US1404HVM": "ami-b6c613d5",
                 "WS2012R2": "ami-e113c082"
