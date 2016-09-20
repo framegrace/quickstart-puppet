@@ -15,9 +15,8 @@
             "Type": "AWS::EC2::VPC::Id"
         },
         "RemoteAdminCIDR": {
-            "Description": "CIDR block or IP for SSH and RDP access",
+            "Description": "CIDR block or IP for SSH and RDP access Note: a value of 0.0.0.0/0 will allow access from ANY ip address",
             "Type": "String",
-            "Default": "0.0.0.0/0",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
         "PuppetMasterIP": {
