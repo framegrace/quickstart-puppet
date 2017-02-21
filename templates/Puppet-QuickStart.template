@@ -13,9 +13,8 @@
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
         "RemoteAdminCIDR": {
-            "Description": "CIDR block or IP for SSH access",
+            "Description": "CIDR block or IP for SSH access Note: a value of 0.0.0.0/0 will allow access from ANY ip address",
             "Type": "String",
-            "Default": "0.0.0.0/0",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
         "VPCCIDR": {
@@ -148,6 +147,9 @@
                     },
                     "PuppetAgentWindowsIP": {
                         "Ref": "PuppetAgentWindowsIP"
+                    },
+                    "RemoteAdminCIDR": {
+                        "Ref": "RemoteAdminCIDR"
                     }
                 }
             }

@@ -2,5 +2,9 @@
   {
     "ParameterKey": "KeyPairName",
     "ParameterValue": "cikey"
-  } 
+  },
+  {
+    "ParameterKey": "RemoteAdminCIDR",
+    "ParameterValue": "10.0.0.0/16"
+  }
 ]

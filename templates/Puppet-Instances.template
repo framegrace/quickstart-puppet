@@ -15,9 +15,8 @@
             "Type": "AWS::EC2::VPC::Id"
         },
         "RemoteAdminCIDR": {
-            "Description": "CIDR block or IP for SSH and RDP access",
+            "Description": "CIDR block or IP for SSH and RDP access Note: a value of 0.0.0.0/0 will allow access from ANY ip address",
             "Type": "String",
-            "Default": "0.0.0.0/0",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
         "PuppetMasterIP": {
@@ -45,52 +44,52 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "US1404HVM": "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20160627",
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2016.08.11"
+                "US1404HVM": "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20161213",
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.01.11"
             },
             "ap-northeast-1": {
-                "US1404HVM": "ami-2e63924f",
-                "WS2012R2": "ami-281ad849"
+                "US1404HVM": "ami-5dd8b73a",
+                "WS2012R2": "ami-7accbe1d"
             },
             "ap-northeast-2": {
-                "US1404HVM": "ami-979258f9",
-                "WS2012R2": "ami-ab549ec5"
+                "US1404HVM": "ami-7669be18",
+                "WS2012R2": "ami-e979af87"
             },
             "ap-south-1": {
-                "US1404HVM": "ami-4a90fa25",
-                "WS2012R2": "ami-4b7d0824"
+                "US1404HVM": "ami-19f78076",
+                "WS2012R2": "ami-31a6d05e"
             },
             "ap-southeast-1": {
-                "US1404HVM": "ami-ea2bf989",
-                "WS2012R2": "ami-d6f32ab5"
+                "US1404HVM": "ami-35bc1356",
+                "WS2012R2": "ami-89e74cea"
             },
             "ap-southeast-2": {
-                "US1404HVM": "ami-396a415a",
-                "WS2012R2": "ami-47bf8b24"
+                "US1404HVM": "ami-8083bbe3",
+                "WS2012R2": "ami-059d9866"
             },
             "eu-central-1": {
-                "US1404HVM": "ami-4bd03b24",
-                "WS2012R2": "ami-1db84972"
+                "US1404HVM": "ami-7612d319",
+                "WS2012R2": "ami-6f559800"
             },
             "eu-west-1": {
-                "US1404HVM": "ami-02b62c71",
-                "WS2012R2": "ami-a8592cdb"
+                "US1404HVM": "ami-b9b394ca",
+                "WS2012R2": "ami-dd9eb6ae"
             },
             "sa-east-1": {
-                "US1404HVM": "ami-d952c7b5",
-                "WS2012R2": "ami-2a70e646"
+                "US1404HVM": "ami-8bcc54e7",
+                "WS2012R2": "ami-f4d84298"
             },
             "us-east-1": {
-                "US1404HVM": "ami-2d39803a",
-                "WS2012R2": "ami-bd3ba0aa"
+                "US1404HVM": "ami-5ac2cd4d",
+                "WS2012R2": "ami-abf616bd"
             },
             "us-west-1": {
-                "US1404HVM": "ami-992661f9",
-                "WS2012R2": "ami-69febd09"
+                "US1404HVM": "ami-7790c617",
+                "WS2012R2": "ami-76227116"
             },
             "us-west-2": {
-                "US1404HVM": "ami-42569022",
-                "WS2012R2": "ami-1712d877"
+                "US1404HVM": "ami-30e65350",
+                "WS2012R2": "ami-1562d075"
             }
         }
     },
