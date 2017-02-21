@@ -148,7 +148,6 @@
                     "PuppetAgentWindowsIP": {
                         "Ref": "PuppetAgentWindowsIP"
                     },
-                    },
                     "RemoteAdminCIDR": {
                         "Ref": "RemoteAdminCIDR"
                     }
