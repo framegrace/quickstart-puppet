@@ -1,6 +1,5 @@
 class iisserver {
-  windowsfeature { 'IIS':
-    feature_name => [
+  $iis_features = [
       'Web-Server',
       'Web-WebServer',
       'Web-Asp-Net45',
@@ -12,7 +11,9 @@ class iisserver {
       'Web-Filtering',
       'Web-Mgmt-Console',
       'Web-Mgmt-Tools'
-    ]
+  ]
+  windowsfeature { '$iis_features':
+     ensure => present
   }
 
   windowsfeature { 'Web-WebServer':
