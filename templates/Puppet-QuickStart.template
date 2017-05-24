@@ -37,6 +37,20 @@
             "Description": "IP for the Windows Puppet agent",
             "Type": "String",
             "Default": "10.0.0.12"
+        },
+        "QSS3BucketName": {
+            "Type": "String",
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+            "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Default": "quickstart-reference",
+            "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+        },
+        "QSS3KeyPrefix": {
+            "Type": "String",
+            "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Default": "puppet/latest/",
+            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
         }
     },
     "Metadata": {
@@ -49,6 +63,15 @@
                     "Parameters": [
                         "KeyPairName",
                         "RemoteAdminCIDR"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "AWS Quick Start Configuration"
+                    },
+                    "Parameters": [
+                        "QSS3BucketName",
+                        "QSS3KeyPrefix"
                     ]
                 },
                 {
@@ -85,15 +108,43 @@
                 },
                 "PuppetAgentWindowsIP": {
                     "default": "IP address for the Windows Puppet agent:"
+                },
+                "QSS3BucketName": {
+                    "default": "Quick Start S3 Bucket Name:"
+                },
+                "QSS3KeyPrefix": {
+                    "default": "Quick Start S3 Key Prefix:"
                 }
             }
+        }
+    },
+    "Conditions": {
+        "GovCloudCondition": {
+            "Fn::Equals": [{
+                    "Ref": "AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
         }
     },
     "Resources": {
         "VPCStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/puppet/latest/templates/Puppet-VPC.template",
+                "TemplateURL": { 
+                    "Fn::Sub": [
+                           "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/Puppet-VPC.template",
+                           {
+                            "QSS3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                           }
+                       ]
+                },
                 "Parameters": {
                     "KeyPairName": {
                         "Ref": "KeyPairName"
@@ -119,7 +170,20 @@
         "InstanceStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/puppet/latest/templates/Puppet-Instances.template",
+                "TemplateURL": { 
+                    "Fn::Sub":[
+                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/Puppet-Instances.template",
+                        {
+                            "QSS3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            } 
+                        }
+                    ]
+                },
                 "Parameters": {
                     "KeyPairName": {
                         "Ref": "KeyPairName"
@@ -150,6 +214,12 @@
                     },
                     "RemoteAdminCIDR": {
                         "Ref": "RemoteAdminCIDR"
+                    },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+                    "QSS3KeyPrefix": {
+                        "Ref": "QSS3KeyPrefix"
                     }
                 }
             }
