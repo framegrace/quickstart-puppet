@@ -119,63 +119,63 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "US1404HVM": "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20171115.1",
+                "US1404HVM": "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20171208",
                 "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.11.29"
             },
             "ap-northeast-1": {
-                "US1404HVM": "ami-2f2d9c49",
+                "US1404HVM": "ami-fae6649c",
                 "WS2012R2": "ami-7dcb701b"
             },
             "ap-northeast-2": {
-                "US1404HVM": "ami-e49e398a",
+                "US1404HVM": "ami-5451f73a",
                 "WS2012R2": "ami-231cbb4d"
             },
             "ap-south-1": {
-                "US1404HVM": "ami-46eea129",
+                "US1404HVM": "ami-feb4fc91",
                 "WS2012R2": "ami-40e6a82f"
             },
             "ap-southeast-1": {
-                "US1404HVM": "ami-84a6f3e7",
+                "US1404HVM": "ami-2be08157",
                 "WS2012R2": "ami-658ad806"
             },
             "ap-southeast-2": {
-                "US1404HVM": "ami-4cc8232e",
+                "US1404HVM": "ami-a458afc6",
                 "WS2012R2": "ami-c600f5a4"
             },
             "ca-central-1": {
-                "US1404HVM": "ami-338b3057",
+                "US1404HVM": "ami-72b90316",
                 "WS2012R2": "ami-0641fa62"
             },
             "eu-central-1": {
-                "US1404HVM": "ami-e22aaa8d",
+                "US1404HVM": "ami-5231b93d",
                 "WS2012R2": "ami-33df505c"
             },
             "eu-west-1": {
-                "US1404HVM": "ami-2e832957",
+                "US1404HVM": "ami-64b3361d",
                 "WS2012R2": "ami-30ef5249"
             },
             "eu-west-2": {
-                "US1404HVM": "ami-3fc8d75b",
+                "US1404HVM": "ami-7950491d",
                 "WS2012R2": "ami-39746a5d"
             },
             "sa-east-1": {
-                "US1404HVM": "ami-981550f4",
+                "US1404HVM": "ami-0f501663",
                 "WS2012R2": "ami-60a5e10c"
             },
             "us-east-1": {
-                "US1404HVM": "ami-c29e1cb8",
+                "US1404HVM": "ami-764a210c",
                 "WS2012R2": "ami-4009963a"
             },
             "us-east-2": {
-                "US1404HVM": "ami-f0f8d695",
+                "US1404HVM": "ami-d36e46b6",
                 "WS2012R2": "ami-44745d21"
             },
             "us-west-1": {
-                "US1404HVM": "ami-8b90a9eb",
+                "US1404HVM": "ami-1e4d497e",
                 "WS2012R2": "ami-ec8bb08c"
             },
             "us-west-2": {
-                "US1404HVM": "ami-25cf1c5d",
+                "US1404HVM": "ami-5dcc6a25",
                 "WS2012R2": "ami-c55089bd"
             }
         }
