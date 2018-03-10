@@ -411,7 +411,7 @@
                 }
             }
         },
-        "LinuxAgent": {
+        "LinuxAgent1": {
             "Type": "AWS::EC2::Instance",
             "DependsOn": "PuppetWaitCondition",
             "Properties": {
@@ -424,7 +424,7 @@
                         "US1404HVM"
                     ]
                 },
-                "InstanceType": "t2.medium",
+                "InstanceType": "t1.small",
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
@@ -450,7 +450,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "LinuxAgent"
+                        "Value": "LinuxAgent1"
                     }
                 ],
                 "KeyName": {
@@ -479,205 +479,46 @@
                 }
             }
         },
-        "WindowsAgent": {
+        "LinuxAgent2": {
             "Type": "AWS::EC2::Instance",
-            "DependsOn": "PuppetMaster",
-            "Metadata": {
-                "AWS::CloudFormation::Authentication": {
-                    "default": {
-                        "type": "S3",
-                        "buckets": [
-                            {
-                                "Ref": "QSS3BucketName"
-                            }
-                        ],
-                        "roleName": {
-                            "Ref": "PuppetHostRole"
-                        }
-                    }
-                },
-                "AWS::CloudFormation::Init": {
-                    "configSets": {
-                        "config": [
-                            "setup"
-                        ]
-                    },
-                    "setup": {
-                        "files": {
-                            "c:\\cfn\\cfn-hup.conf": {
-                                "content": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "[main]\n",
-                                            "stack=",
-                                            {
-                                                "Ref": "AWS::StackId"
-                                            },
-                                            "\n",
-                                            "region=",
-                                            {
-                                                "Ref": "AWS::Region"
-                                            },
-                                            "\n"
-                                        ]
-                                    ]
-                                }
-                            },
-                            "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf": {
-                                "content": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "[cfn-auto-reloader-hook]\n",
-                                            "triggers=post.update\n",
-                                            "path=Resources.WindowsAgent.Metadata.AWS::CloudFormation::Init\n",
-                                            "action=cfn-init.exe -v -s ",
-                                            {
-                                                "Ref": "AWS::StackId"
-                                            },
-                                            " -r WindowsAgent",
-                                            " --region ",
-                                            {
-                                                "Ref": "AWS::Region"
-                                            },
-                                            "\n"
-                                        ]
-                                    ]
-                                }
-                            },
-                            "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Unzip-Archive.ps1"
-                            },
-                            "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/modules/AWSQuickStart.zip"
-                            },
-                            "c:\\cfn\\downloads\\puppet-latest.msi": {
-                                "source": "https://downloads.puppetlabs.com/windows/puppet-latest.msi"
-                            },
-                            "c:\\cfn\\scripts\\New-LocalAdministrator.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/New-LocalAdministrator.ps1"
-                            },
-                            "c:\\cfn\\downloads\\Win8.1AndW2K12R2-KB3134758-x64.msu": {
-                                "source": "https://download.microsoft.com/download/2/C/6/2C6E1B4A-EBE5-48A6-B225-2D2058A9CEFB/Win8.1AndW2K12R2-KB3134758-x64.msu"
-                            },
-                            "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
-                            },
-                            "c:\\cfn\\downloads\\GeoTrust_Global_CA.pem": {
-                                "source": "https://www.geotrust.com/resources/root_certificates/certificates/GeoTrust_Global_CA.pem"
-                            },
-                            "c:\\cfn\\scripts\\PuppetAgentWindowsInit.bat": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/puppet/latest/scripts/iisserver/PuppetAgentWindowsInit.bat"
-                            }
-                        },
-                        "commands": {
-                            "a-set-execution-policy": {
-                                "command": "powershell.exe -command Set-ExecutionPolicy RemoteSigned -Force",
-                                "waitAfterCompletion": "0"
-                            },
-                            "b-unpack-quickstart-module": {
-                                "command": "powershell.exe -command c:\\cfn\\scripts\\Unzip-Archive.ps1 -Source c:\\cfn\\modules\\AWSQuickStart.zip -Destination C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules\\",
-                                "waitAfterCompletion": "0"
-                            },
-                            "c-init-quickstart-module": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"",
-                                            "New-AWSQuickStartResourceSignal -Stack '",
-                                            {
-                                                "Ref": "AWS::StackName"
-                                            },
-                                            "' -Resource 'WindowsAgent' -Region '",
-                                            {
-                                                "Ref": "AWS::Region"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "d-install-puppet-agent": {
-                                "command": "powershell.exe -command Start-Process msiexec.exe '/qn /norestart /i C:\\cfn\\downloads\\puppet-latest.msi PUPPET_MASTER_SERVER=puppet.example.com' -NoNewWindow -Wait",
-                                "waitAfterCompletion": "0"
-                            },
-                            "e-execute-powershell-script-RenameComputer": {
-                                "command": "powershell.exe -Command Rename-Computer -NewName windowsagent -Restart",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "f-execute-powershell-script-SetDnsSuffix": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -command c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix 'example.com'"
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "forever"
-                            },
-                            "g-send-signal": {
-                                "command": "c:\\cfn\\scripts\\PuppetAgentWindowsInit.bat",
-                                "waitAfterCompletion": "0"
-                            },
-                            "h-send-signal": {
-                                "command": "powershell.exe -command Write-AWSQuickStartStatus",
-                                "waitAfterCompletion": "0"
-                            }
-                        },
-                        "services": {
-                            "windows": {
-                                "cfn-hup": {
-                                    "enabled": "true",
-                                    "ensureRunning": "true",
-                                    "files": [
-                                        "c:\\cfn\\cfn-hup.conf",
-                                        "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+            "DependsOn": "PuppetWaitCondition",
             "Properties": {
-                "IamInstanceProfile": {
-                    "Ref": "PuppetHostProfile"
-                },
                 "ImageId": {
                     "Fn::FindInMap": [
                         "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
-                        "WS2012R2"
+                        "US1404HVM"
                     ]
                 },
-                "InstanceType": "t2.medium",
-                "SubnetId": {
-                    "Ref": "SubnetId"
-                },
+                "InstanceType": "t1.small",
+                "NetworkInterfaces": [
+                    {
+                        "DeleteOnTermination": "true",
+                        "DeviceIndex": 0,
+                        "SubnetId": {
+                            "Ref": "SubnetId"
+                        },
+                        "PrivateIpAddresses": [
+                            {
+                                "Primary": "true",
+                                "PrivateIpAddress": {
+                                    "Ref": "PuppetAgentLinuxIP"
+                                }
+                            }
+                        ],
+                        "GroupSet": [
+                            {
+                                "Ref": "PuppetAgentLinuxSecurityGroup"
+                            }
+                        ]
+                    }
+                ],
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "WindowsAgent"
-                    }
-                ],
-                "BlockDeviceMappings": [
-                    {
-                        "DeviceName": "/dev/sda1",
-                        "Ebs": {
-                            "VolumeSize": "50",
-                            "VolumeType": "gp2"
-                        }
-                    }
-                ],
-                "SecurityGroupIds": [
-                    {
-                        "Ref": "PuppetAgentWindowsSecurityGroup"
+                        "Value": "LinuxAgent2"
                     }
                 ],
                 "KeyName": {
@@ -688,27 +529,21 @@
                         "Fn::Join": [
                             "",
                             [
-                                "<script>\n",
-                                "cfn-init.exe -v -c config -s ",
-                                {
-                                    "Ref": "AWS::StackId"
-                                },
-                                " -r WindowsAgent",
-                                " --region ",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                "\n",
-                                "</script>\n"
+                                "#!/bin/bash -e\n",
+                                "export LC_ALL=C\n",
+                                "export PATH=/usr/local/bin:$PATH\n",
+                                "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
+                                "hostname linuxagent.example.com\n",
+                                "apt-get update\n",
+                                "apt-get install -y python-pip\n",
+                                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                                "apt-get install puppet -y\n",
+                                "sed -i '/main/aserver=puppet.example.com' /etc/puppet/puppet.conf\n",
+                                "puppet agent --enable\n",
+                                "puppet agent --test --verbose\n"
                             ]
                         ]
                     }
-                }
-            },
-            "CreationPolicy": {
-                "ResourceSignal": {
-                    "Count": "1",
-                    "Timeout": "PT40M"
                 }
             }
         },
@@ -839,20 +674,20 @@
         "PuppetAgentLinuxDnsName": {
             "Value": {
                 "Fn::GetAtt": [
-                    "LinuxAgent",
+                    "LinuxAgent1",
                     "PublicDnsName"
                 ]
             },
             "Description": "Public DNS Name for the Puppet Linux agent"
         },
-        "PuppetAgentWindowsDnsName": {
+        "PuppetAgentLinuxDnsName": {
             "Value": {
                 "Fn::GetAtt": [
-                    "WindowsAgent",
+                    "LinuxAgent2",
                     "PublicDnsName"
                 ]
             },
-            "Description": "Public DNS Name for the Puppet Windows agent"
+            "Description": "Public DNS Name for the Puppet Linux agent"
         }
     }
 }
