@@ -4,7 +4,8 @@
     "Parameters": {
         "KeyPairName": {
             "Description": "Public/private key pair",
-            "Type": "AWS::EC2::KeyPair::KeyName"
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "Default": "cursos"
         },
         "SubnetCIDR": {
             "Description": "CIDR block for the public subnet",
@@ -23,10 +24,15 @@
             "Type": "String",
             "Default": "10.0.0.10"
         },
-        "PuppetAgentLinuxIP": {
+        "PuppetAgentLinuxIP1": {
             "Description": "IP for the Puppet agent",
             "Type": "String",
             "Default": "10.0.0.11"
+        },
+        "PuppetAgentLinuxIP2": {
+            "Description": "IP for the Puppet agent",
+            "Type": "String",
+            "Default": "10.0.0.12"
         },
         "PuppetAgentWindowsIP": {
             "Description": "IP for the Puppet agent",
@@ -207,7 +213,7 @@
                 ]
             }
         },
-        "PuppetAgentLinuxDNSRecord": {
+        "PuppetAgentLinuxDNSRecord1": {
             "Type": "AWS::Route53::RecordSet",
             "Properties": {
                 "HostedZoneId": {
@@ -221,12 +227,36 @@
                         ]
                     ]
                 },
-                "Name": "linuxagent.example.com",
+                "Name": "linuxagent1.example.com",
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
                     {
-                        "Ref": "PuppetAgentLinuxIP"
+                        "Ref": "PuppetAgentLinuxIP1"
+                    }
+                ]
+            }
+        },
+        "PuppetAgentLinuxDNSRecord2": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneId": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "/hostedzone/",
+                            {
+                                "Ref": "HostedZone"
+                            }
+                        ]
+                    ]
+                },
+                "Name": "linuxagent2.example.com",
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [
+                    {
+                        "Ref": "PuppetAgentLinuxIP2"
                     }
                 ]
             }

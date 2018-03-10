@@ -29,7 +29,8 @@
                     },
                     "Parameters": [
                         "PuppetMasterIP",
-                        "PuppetAgentLinuxIP",
+                        "PuppetAgentLinuxIP1",
+                        "PuppetAgentLinuxIP2",
                         "PuppetAgentWindowsIP"
                     ]
                 }
@@ -53,8 +54,11 @@
                 "PuppetMasterIP": {
                     "default": "IP Address for Puppet Master"
                 },
-                "PuppetAgentLinuxIP": {
-                    "default": "IP Address for the Linux Agent"
+                "PuppetAgentLinuxIP1": {
+                    "default": "IP Address for the Linux Agent 1"
+                },
+                "PuppetAgentLinuxIP1": {
+                    "default": "IP Address for the Linux Agent 2"
                 },
                 "PuppetAgentWindowsIP": {
                     "default": "IP Address for the Windows Agent"
@@ -85,8 +89,13 @@
             "Type": "String",
             "Default": "10.0.0.10"
         },
-        "PuppetAgentLinuxIP": {
-            "Description": "IP for the Puppet agent",
+        "PuppetAgentLinuxIP1": {
+            "Description": "IP for the Puppet agent 1",
+            "Type": "String",
+            "Default": "10.0.0.11"
+        },
+        "PuppetAgentLinuxIP2": {
+            "Description": "IP for the Puppet agent 2",
             "Type": "String",
             "Default": "10.0.0.11"
         },
@@ -436,7 +445,7 @@
                             {
                                 "Primary": "true",
                                 "PrivateIpAddress": {
-                                    "Ref": "PuppetAgentLinuxIP"
+                                    "Ref": "PuppetAgentLinuxIP1"
                                 }
                             }
                         ],
@@ -504,7 +513,7 @@
                             {
                                 "Primary": "true",
                                 "PrivateIpAddress": {
-                                    "Ref": "PuppetAgentLinuxIP"
+                                    "Ref": "PuppetAgentLinuxIP2"
                                 }
                             }
                         ],
