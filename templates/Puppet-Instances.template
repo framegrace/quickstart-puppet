@@ -433,7 +433,7 @@
                         "US1404HVM"
                     ]
                 },
-                "InstanceType": "t1.small",
+                "InstanceType": "t2.small",
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
@@ -501,7 +501,7 @@
                         "US1404HVM"
                     ]
                 },
-                "InstanceType": "t1.small",
+                "InstanceType": "t2.small",
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
