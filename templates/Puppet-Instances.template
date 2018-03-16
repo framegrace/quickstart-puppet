@@ -706,7 +706,7 @@
                 ]
             }
         },
-        "PuppetMasterPublicDNSRecord": {
+        "PuppetAgent1PublicDNSRecord": {
             "Type": "AWS::Route53::RecordSet",
             "Properties": {
                 "HostedZoneId": "Z11P1VBPAOBP7C",
@@ -723,7 +723,7 @@
                 ]
             }
         },
-        "PuppetMasterPublicDNSRecord": {
+        "PuppetAgent2PublicDNSRecord": {
             "Type": "AWS::Route53::RecordSet",
             "Properties": {
                 "HostedZoneId": "Z11P1VBPAOBP7C",
