@@ -84,8 +84,13 @@
             "Type": "String",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "PublicSubdomainName": {
-            "Description": "Subdomain for pubic DNS",
+        "DNSZone": {
+            "Description": "DNS Subdomain",
+            "Type": "String",
+            "Default": "leansm.com"
+        },
+        "SubdomainName": {
+            "Description": "DNS Subdomain",
             "Type": "String",
             "Default": "curso"
         },
@@ -385,7 +390,9 @@
                                 "#!/bin/bash -e\n",
                                 "export LC_ALL=C\n",
                                 "export PATH=/usr/local/bin:$PATH\n",
-                                "hostname puppet.leansm.com\n",
+                                {
+                                 "Fn::Sub": "hostname puppet.${SubdomainName}.${DNSZone}\n"
+                                },
                                 "apt-get update\n",
                                 "apt-get install -y python-pip\n",
                                 "pip install awscli\n",
@@ -397,12 +404,12 @@
                                 "dpkg -i /tmp/puppetlabs-release-trusty.deb\n",
                                 "apt-get install puppetmaster-passenger -y\n",
                                 "sed --in-place '/templatedir/ d' /etc/puppet/puppet.conf\n",
-                                {
-                                    "Fn::Sub": "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/autosign.conf /etc/puppet/autosign.conf --region ${AWS::Region}\n"
-                                },
+                                { "Fn::Sub": "echo 'linuxagent1.${SubdomainName}.${DNSZone}' > /etc/puppet/autosign.conf\n" },
+                                { "Fn::Sub": "echo 'linuxagent2.${SubdomainName}.${DNSZone}' >> /etc/puppet/autosign.conf\n" },
                                 {
                                     "Fn::Sub": "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/site.pp /etc/puppet/manifests/site.pp --region ${AWS::Region}\n"
                                 },
+                                { "Fn::Sub": "sed --in-place 's/XXXX/${SubdomainName}.${DNSZone}/' /etc/puppet/manifests/site.pp\n" },
                                 "mkdir -p /etc/puppet/modules/lampserver/manifests\n",
                                 "mkdir -p /etc/puppet/modules/iisserver/manifests\n",
                                 "puppet module install puppetlabs-powershell\n",
@@ -479,12 +486,16 @@
                                 "export LC_ALL=C\n",
                                 "export PATH=/usr/local/bin:$PATH\n",
                                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
-                                "hostname linuxagent1.leansm.com\n",
+                                {
+                                 "Fn::Sub": "hostname linuxagent1.${SubdomainName}.${DNSZone}\n"
+                                },
                                 "apt-get update\n",
                                 "apt-get install -y python-pip\n",
                                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
                                 "apt-get install puppet -y\n",
-                                "sed -i '/main/aserver=puppet.leansm.com' /etc/puppet/puppet.conf\n",
+                                {
+                                 "Fn::Sub": "sed -i '/main/aserver=puppet.${SubdomainName}.${DNSZone}' /etc/puppet/puppet.conf\n"
+                                },
                                 "puppet agent --enable\n",
                                 "puppet agent --test --verbose\n"
                             ]
@@ -547,12 +558,16 @@
                                 "export LC_ALL=C\n",
                                 "export PATH=/usr/local/bin:$PATH\n",
                                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
-                                "hostname linuxagent2.leansm.com\n",
+                                {
+                                 "Fn::Sub": "hostname linuxagent2.${SubdomainName}.${DNSZone}\n"
+                                },
                                 "apt-get update\n",
                                 "apt-get install -y python-pip\n",
                                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
                                 "apt-get install puppet -y\n",
-                                "sed -i '/main/aserver=puppet.leansm.com' /etc/puppet/puppet.conf\n",
+                                {
+                                 "Fn::Sub": "sed -i '/main/aserver=puppet.${SubdomainName}.${DNSZone}' /etc/puppet/puppet.conf\n"
+                                },
                                 "puppet agent --enable\n",
                                 "puppet agent --test --verbose\n"
                             ]
@@ -678,7 +693,7 @@
             "Type": "AWS::Route53::RecordSet",
             "Properties": {
                 "HostedZoneId": "Z11P1VBPAOBP7C",
-                "Name": "puppermaster.curso1.leansm.com",
+                "Name": { "Fn::Sub": "puppetmaster.${SubdomainName}.${DNSZone}" },
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
@@ -691,6 +706,40 @@
                 ]
             }
         },
+        "PuppetMasterPublicDNSRecord": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneId": "Z11P1VBPAOBP7C",
+                "Name": { "Fn::Sub": "linuxagent1.${SubdomainName}.${DNSZone}" },
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [
+                    {
+                        "Fn::GetAtt": [
+                          "LinuxAgent1",
+                          "PublicIp"
+                         ]
+                    }
+                ]
+            }
+        },
+        "PuppetMasterPublicDNSRecord": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneId": "Z11P1VBPAOBP7C",
+                "Name": { "Fn::Sub": "linuxagent2.${SubdomainName}.${DNSZone}" },
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [
+                    {
+                        "Fn::GetAtt": [
+                          "LinuxAgent2",
+                          "PublicIp"
+                         ]
+                    }
+                ]
+            }
+        }
     },
     "Outputs": {
         "PuppetMasterDnsName": {

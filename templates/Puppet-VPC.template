@@ -19,15 +19,15 @@
             "Default": "10.0.0.0/16",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "PublicZone": {
+        "DNSZone": {
             "Description": "Zone for pubic DNS",
             "Type": "String",
             "Default": "leansm.com"
         },
-        "PublicSubdomainName": {
+        "SubdomainName": {
             "Description": "Subdomain for pubic DNS",
             "Type": "String",
-            "Default": "curso"
+            "Default": "curso1"
         },
         "PuppetMasterIP": {
             "Description": "IP for the Puppet master",
@@ -183,9 +183,16 @@
             "Type": "AWS::Route53::HostedZone",
             "Properties": {
                 "HostedZoneConfig": {
-                    "Comment": "Hosted zone for leansm.com"
+                    "Comment": { "Fn::Join": [
+                           " ",
+                           [
+                           "Private hosted zone for",
+                           { "Ref": "DNSZone" }
+                           ]
+                        ]
+                    }
                 },
-                "Name": "leansm.com",
+                "Name": { "Ref": "DNSZone" },
                 "VPCs": [
                     {
                         "VPCId": {
@@ -213,7 +220,15 @@
                         ]
                     ]
                 },
-                "Name": "puppet.leansm.com",
+                "Name": { "Fn::Join": [
+                           ".",
+                           [
+                           "puppet",
+                           { "Ref": "SubdomainName" },
+                           { "Ref": "DNSZone" },
+                           ]
+                        ]
+                },
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
@@ -237,7 +252,15 @@
                         ]
                     ]
                 },
-                "Name": "linuxagent1.leansm.com",
+                "Name": { "Fn::Join": [
+                           ".",
+                           [
+                           "linuxagent1",
+                           { "Ref": "SubdomainName" },
+                           { "Ref": "DNSZone" },
+                           ]
+                        ]
+                },
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
@@ -261,36 +284,20 @@
                         ]
                     ]
                 },
-                "Name": "linuxagent2.leansm.com",
+                "Name": { "Fn::Join": [
+                           ".",
+                           [
+                           "linuxagent2",
+                           { "Ref": "SubdomainName" },
+                           { "Ref": "DNSZone" },
+                           ]
+                        ]
+                },
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
                     {
                         "Ref": "PuppetAgentLinuxIP2"
-                    }
-                ]
-            }
-        },
-        "PuppetAgentWindowsDNSRecord": {
-            "Type": "AWS::Route53::RecordSet",
-            "Properties": {
-                "HostedZoneId": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "/hostedzone/",
-                            {
-                                "Ref": "HostedZone"
-                            }
-                        ]
-                    ]
-                },
-                "Name": "windowsagent.leansm.com",
-                "Type": "A",
-                "TTL": "900",
-                "ResourceRecords": [
-                    {
-                        "Ref": "PuppetAgentWindowsIP"
                     }
                 ]
             }

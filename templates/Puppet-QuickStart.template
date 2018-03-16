@@ -24,10 +24,15 @@
             "Default": "10.0.0.0/16",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "PublicSubdomainName": {
+        "DNSZone": {
             "Description": "Subdomain for public DND",
             "Type": "String",
             "Default": "leansm.com"
+        },
+        "SubdomainName": {
+            "Description": "Subdomain for public DND",
+            "Type": "String",
+            "Default": "curso1"
         },
         "PuppetMasterIP": {
             "Description": "IP for the Puppet master",
@@ -92,7 +97,8 @@
                     "Parameters": [
                         "VPCCIDR",
                         "SubnetCIDR",
- 			"PublicSubdomainName",
+ 			"DNSZone",
+ 			"SubdomainName",
                         "PuppetMasterIP",
                         "PuppetAgentLinuxIP1",
                         "PuppetAgentLinuxIP2",
@@ -113,8 +119,11 @@
                 "SubnetCIDR": {
                     "default": "CIDR range for the subnet in your VPC:"
                 },
-                "PublicSubdomainName": {
-                    "default": "Public subdomain name:"
+                "DNSZone": {
+                    "default": "Domain zone:"
+                },
+                "SubdomainName": {
+                    "default": "Subdomain name:"
                 },
                 "PuppetMasterIP": {
                     "default": "IP address for the Puppet master:"
@@ -174,8 +183,11 @@
                     "VPCCIDR": {
                         "Ref": "VPCCIDR"
                     },
-                    "PublicSubdomainName": {
-                        "Ref": "PublicSubdomainName"
+                    "DNSZone": {
+                        "Ref": "DNSZone"
+                    },
+                    "SubdomainName": {
+                        "Ref": "SubdomainName"
                     },
                     "PuppetMasterIP": {
                         "Ref": "PuppetMasterIP"
@@ -228,8 +240,11 @@
                     "VPCCIDR": {
                         "Ref": "VPCCIDR"
                     },
-                    "PublicSubdomainName": {
-                        "Ref": "PublicSubdomainName"
+                    "DNSZone": {
+                        "Ref": "DNSZone"
+                    },
+                    "SubdomainName": {
+                        "Ref": "SubdomainName"
                     },
                     "PuppetMasterIP": {
                         "Ref": "PuppetMasterIP"

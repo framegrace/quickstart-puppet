@@ -1,13 +1,9 @@
 node default { }
 
-node 'linuxagent1.leansm.com' {
+node 'linuxagent1.XXXX' {
   include lampserver
 }
 
-node 'linuxagent2.leansm.com' {
+node 'linuxagent2.XXXX' {
   include lampserver
-}
-
-node 'windowsagent.leansm.com' {
-  include iisserver
 }
