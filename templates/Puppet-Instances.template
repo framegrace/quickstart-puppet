@@ -367,7 +367,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "Puppet"
+                        "Value": { "Fn::Sub" : "Puppet.${SubdomainName}" }
                     }
                 ],
                 "BlockDeviceMappings": [
@@ -471,7 +471,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "LinuxAgent1"
+                        "Value": { "Fn::Sub" : "LinuxAgent1.${SubdomainName}" }
                     }
                 ],
                 "KeyName": {
@@ -543,7 +543,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "LinuxAgent2"
+                        "Value": { "Fn::Sub" : "LinuxAgent2.${SubdomainName}" }
                     }
                 ],
                 "KeyName": {
