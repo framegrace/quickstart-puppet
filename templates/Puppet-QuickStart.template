@@ -24,6 +24,11 @@
             "Default": "10.0.0.0/16",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
+        "PublicSubdomainName": {
+            "Description": "Subdomain for public DND",
+            "Type": "String",
+            "Default": "leansm.com"
+        },
         "PuppetMasterIP": {
             "Description": "IP for the Puppet master",
             "Type": "String",
@@ -87,6 +92,7 @@
                     "Parameters": [
                         "VPCCIDR",
                         "SubnetCIDR",
+ 			"PublicSubdomainName",
                         "PuppetMasterIP",
                         "PuppetAgentLinuxIP1",
                         "PuppetAgentLinuxIP2",
@@ -106,6 +112,9 @@
                 },
                 "SubnetCIDR": {
                     "default": "CIDR range for the subnet in your VPC:"
+                },
+                "PublicSubdomainName": {
+                    "default": "Public subdomain name:"
                 },
                 "PuppetMasterIP": {
                     "default": "IP address for the Puppet master:"
@@ -165,6 +174,9 @@
                     "VPCCIDR": {
                         "Ref": "VPCCIDR"
                     },
+                    "PublicSubdomainName": {
+                        "Ref": "PublicSubdomainName"
+                    },
                     "PuppetMasterIP": {
                         "Ref": "PuppetMasterIP"
                     },
@@ -215,6 +227,9 @@
                     },
                     "VPCCIDR": {
                         "Ref": "VPCCIDR"
+                    },
+                    "PublicSubdomainName": {
+                        "Ref": "PublicSubdomainName"
                     },
                     "PuppetMasterIP": {
                         "Ref": "PuppetMasterIP"

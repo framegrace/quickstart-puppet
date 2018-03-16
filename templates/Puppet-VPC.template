@@ -19,6 +19,16 @@
             "Default": "10.0.0.0/16",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
+        "PublicZone": {
+            "Description": "Zone for pubic DNS",
+            "Type": "String",
+            "Default": "leansm.com"
+        },
+        "PublicSubdomainName": {
+            "Description": "Subdomain for pubic DNS",
+            "Type": "String",
+            "Default": "curso"
+        },
         "PuppetMasterIP": {
             "Description": "IP for the Puppet master",
             "Type": "String",
@@ -173,9 +183,9 @@
             "Type": "AWS::Route53::HostedZone",
             "Properties": {
                 "HostedZoneConfig": {
-                    "Comment": "Hosted zone for example.com"
+                    "Comment": "Hosted zone for leansm.com"
                 },
-                "Name": "example.com",
+                "Name": "leansm.com",
                 "VPCs": [
                     {
                         "VPCId": {
@@ -203,7 +213,7 @@
                         ]
                     ]
                 },
-                "Name": "puppet.example.com",
+                "Name": "puppet.leansm.com",
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
@@ -227,7 +237,7 @@
                         ]
                     ]
                 },
-                "Name": "linuxagent1.example.com",
+                "Name": "linuxagent1.leansm.com",
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
@@ -251,7 +261,7 @@
                         ]
                     ]
                 },
-                "Name": "linuxagent2.example.com",
+                "Name": "linuxagent2.leansm.com",
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [
@@ -275,7 +285,7 @@
                         ]
                     ]
                 },
-                "Name": "windowsagent.example.com",
+                "Name": "windowsagent.leansm.com",
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [

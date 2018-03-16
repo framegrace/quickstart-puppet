@@ -84,6 +84,11 @@
             "Type": "String",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
+        "PublicSubdomainName": {
+            "Description": "Subdomain for pubic DNS",
+            "Type": "String",
+            "Default": "curso"
+        },
         "PuppetMasterIP": {
             "Description": "IP for the Puppet master",
             "Type": "String",
@@ -380,7 +385,7 @@
                                 "#!/bin/bash -e\n",
                                 "export LC_ALL=C\n",
                                 "export PATH=/usr/local/bin:$PATH\n",
-                                "hostname puppet.example.com\n",
+                                "hostname puppet.leansm.com\n",
                                 "apt-get update\n",
                                 "apt-get install -y python-pip\n",
                                 "pip install awscli\n",
@@ -474,12 +479,12 @@
                                 "export LC_ALL=C\n",
                                 "export PATH=/usr/local/bin:$PATH\n",
                                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
-                                "hostname linuxagent1.example.com\n",
+                                "hostname linuxagent1.leansm.com\n",
                                 "apt-get update\n",
                                 "apt-get install -y python-pip\n",
                                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
                                 "apt-get install puppet -y\n",
-                                "sed -i '/main/aserver=puppet.example.com' /etc/puppet/puppet.conf\n",
+                                "sed -i '/main/aserver=puppet.leansm.com' /etc/puppet/puppet.conf\n",
                                 "puppet agent --enable\n",
                                 "puppet agent --test --verbose\n"
                             ]
@@ -542,12 +547,12 @@
                                 "export LC_ALL=C\n",
                                 "export PATH=/usr/local/bin:$PATH\n",
                                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
-                                "hostname linuxagent2.example.com\n",
+                                "hostname linuxagent2.leansm.com\n",
                                 "apt-get update\n",
                                 "apt-get install -y python-pip\n",
                                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
                                 "apt-get install puppet -y\n",
-                                "sed -i '/main/aserver=puppet.example.com' /etc/puppet/puppet.conf\n",
+                                "sed -i '/main/aserver=puppet.leansm.com' /etc/puppet/puppet.conf\n",
                                 "puppet agent --enable\n",
                                 "puppet agent --test --verbose\n"
                             ]
@@ -668,7 +673,24 @@
                     }
                 ]
             }
-        }
+        },
+        "PuppetMasterPublicDNSRecord": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneId": "Z11P1VBPAOBP7C",
+                "Name": "puppermaster.curso1.leansm.com",
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [
+                    {
+                        "Fn::GetAtt": [
+                          "PuppetMaster",
+                          "PublicIp"
+                         ]
+                    }
+                ]
+            }
+        },
     },
     "Outputs": {
         "PuppetMasterDnsName": {
