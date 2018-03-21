@@ -138,10 +138,12 @@
   "Mappings": {
     "AWSAMIRegionMap": {
       "AMI": {
-        "US1404HVM": "ami-39de0944"
+        "US1404HVM": "ami-39de0944",
+        "JENKINS": "ami-b9db0cc4"
       },
       "us-east-1": {
-        "US1404HVM": "ami-39de0944"
+        "US1404HVM": "ami-39de0944",
+        "JENKINS": "ami-b9db0cc4"
       }
     }
   },
@@ -273,7 +275,7 @@
             "US1404HVM"
           ]
         },
-        "InstanceType": "t2.medium",
+        "InstanceType": "t2.small",
         "NetworkInterfaces": [
           {
             "DeleteOnTermination": "true",
@@ -346,6 +348,133 @@
         }
       }
     },
+    "CalavHombros": {
+      "Type": "AWS::EC2::Instance",
+      "Metadata": {
+        "AWS::CloudFormation::Authentication": {
+          "S3AccessCreds": {
+            "type": "S3",
+            "roleName": {
+              "Ref": "CalavHostRole"
+            },
+            "buckets": [
+              {
+                "Ref": "QSS3BucketName"
+              }
+            ]
+          }
+        },
+        "AWS::CloudFormation::Init": {
+          "config": {
+            "config": {
+              "files": {
+                "/etc/cfn/cfn-hup.conf": {
+                  "content": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource CalavHombros --region ${AWS::Region}"
+                        },
+                        "\n"
+                      ]
+                    ]
+                  },
+                  "mode": "000400",
+                  "user": "root",
+                  "group": "root"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Properties": {
+        "IamInstanceProfile": {
+          "Ref": "CalavHostProfile"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSAMIRegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "JENKINS"
+          ]
+        },
+        "InstanceType": "t2.small",
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "SubnetId"
+            },
+            "PrivateIpAddresses": [
+              {
+                "Primary": "true",
+                "PrivateIpAddress": {
+                  "Ref": "CalavHombrosIP"
+                }
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "CalavDevelSecurityGroup"
+              }
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Sub": "hombros.${SubdomainName}"
+            }
+          }
+        ],
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": "10",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "KeyName": {
+          "Ref": "KeyPairName"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -e\n",
+                "export LC_ALL=C\n",
+                "export PATH=/usr/local/bin:$PATH\n",
+                {
+                  "Fn::Sub": "hostname hombros.${SubdomainName}.${DNSZone}\n"
+                },
+                {
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
+                "apt-get update\n",
+                "apt-get install -y python-pip\n",
+                "pip install awscli\n",
+                "apt-get install -y libffi-dev libssl-dev\n",
+                "pip install --upgrade pip &> /dev/null\n",
+                "pip install pyopenssl ndg-httpsclient pyasn1\n",
+                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                {
+                  "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource CalavDevel --region ${AWS::Region}\n"
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
     "CalavDevelSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -385,6 +514,25 @@
             "CidrIp": {
               "Ref": "VPCCIDR"
             }
+          }
+        ]
+      }
+    },
+    "CalavHombrosPublicDNSRecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": "Z11P1VBPAOBP7C",
+        "Name": {
+          "Fn::Sub": "hombros.${SubdomainName}.${DNSZone}"
+        },
+        "Type": "A",
+        "TTL": "900",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "CalavHombros",
+              "PublicIp"
+            ]
           }
         ]
       }

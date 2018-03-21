@@ -53,6 +53,16 @@
             "Description": "IP for Calavera devel (manos,cerebro,hombros)",
             "Type": "String",
             "Default": "10.0.0.20"
+        },
+        "CalavCaraIP": {
+            "Description": "IP for Calavera devel (manos,cerebro,hombros)",
+            "Type": "String",
+            "Default": "10.0.0.21"
+        },
+        "CalavHombrosIP": {
+            "Description": "IP for Calavera devel (manos,cerebro,hombros)",
+            "Type": "String",
+            "Default": "10.0.0.22"
         }
     },
     "Resources": {
@@ -350,6 +360,19 @@
                 "Type": "A",
                 "TTL": "900",
                 "ResourceRecords": [ { "Ref": "CalavDevelIP" } ]
+            }
+        },
+        "HombrosDevelDNSRecord": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneId": {
+                    "Fn::Join": [ "", [ "/hostedzone/", { "Ref": "HostedZone" } ] ]
+                },
+                "Name": { "Fn::Join": [ ".", [ "hombros", { "Ref": "SubdomainName" }, { "Ref": "DNSZone" }, ] ]
+                },
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [ { "Ref": "CalavHombrosIP" } ]
             }
         },
         "CerebroDevelDNSRecord": {
