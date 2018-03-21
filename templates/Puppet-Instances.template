@@ -397,6 +397,9 @@
                 {
                   "Fn::Sub": "hostname puppet.${SubdomainName}.${DNSZone}\n"
                 },
+                { 
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
                 "pip install awscli\n",
@@ -501,6 +504,9 @@
                 {
                   "Fn::Sub": "hostname linuxagent1.${SubdomainName}.${DNSZone}\n"
                 },
+                {
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
@@ -575,6 +581,9 @@
                 {
                   "Fn::Sub": "hostname linuxagent2.${SubdomainName}.${DNSZone}\n"
                 },
+                {
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
                 "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
@@ -648,6 +657,9 @@
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
                   "Fn::Sub": "hostname linuxagent2.${SubdomainName}.${DNSZone}\n"
+                },
+                {
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
                 },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",

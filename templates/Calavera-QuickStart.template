@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "(0020) - Step 1 of 3: This template deploys the AWS Puppet Quick Start. See the deployment guide at http://aws.amazon.com/quickstart for details. This template creates Amazon EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+  "Description": "(0020) - Step 1 of 3: This template deploys G2 devops course environment.",
   "Parameters": {
     "KeyPairName": {
       "Description": "Public/private key pair",
@@ -131,20 +131,8 @@
         "SubdomainName": {
           "default": "Subdomain name:"
         },
-        "PuppetMasterIP": {
-          "default": "IP address for the Puppet master:"
-        },
-        "PuppetAgentLinuxIP1": {
-          "default": "IP address for the Linux Puppet agent 1:"
-        },
-        "PuppetAgentLinuxIP2": {
-          "default": "IP address for the Linux Puppet agent 2:"
-        },
-        "PuppetAgentLinuxIP3": {
-          "default": "IP address for the Linux Puppet agent 3:"
-        },
         "CalavDevelIP": {
-          "default": "IP address for Calavera Devel (manos,brazos,cerebro) :"
+          "default": "IP address for Calavera Devel (>10.0.0.20) (manos,brazos,cerebro) :"
         },
         "QSS3BucketName": {
           "default": "Quick Start S3 Bucket Name:"
@@ -210,72 +198,6 @@
           },
           "PuppetAgentLinuxIP3": {
             "Ref": "PuppetAgentLinuxIP3"
-          }
-        }
-      }
-    },
-    "PuppetInstanceStack": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": {
-          "Fn::Sub": [
-            "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/Puppet-Instances.template",
-            {
-              "QSS3Region": {
-                "Fn::If": [
-                  "GovCloudCondition",
-                  "s3-us-gov-west-1",
-                  "s3"
-                ]
-              }
-            }
-          ]
-        },
-        "Parameters": {
-          "KeyPairName": {
-            "Ref": "KeyPairName"
-          },
-          "SubnetId": {
-            "Fn::GetAtt": [
-              "VPCStack",
-              "Outputs.SubnetId"
-            ]
-          },
-          "VPC": {
-            "Fn::GetAtt": [
-              "VPCStack",
-              "Outputs.VPC"
-            ]
-          },
-          "VPCCIDR": {
-            "Ref": "VPCCIDR"
-          },
-          "DNSZone": {
-            "Ref": "DNSZone"
-          },
-          "SubdomainName": {
-            "Ref": "SubdomainName"
-          },
-          "PuppetMasterIP": {
-            "Ref": "PuppetMasterIP"
-          },
-          "PuppetAgentLinuxIP1": {
-            "Ref": "PuppetAgentLinuxIP1"
-          },
-          "PuppetAgentLinuxIP2": {
-            "Ref": "PuppetAgentLinuxIP2"
-          },
-          "PuppetAgentLinuxIP3": {
-            "Ref": "PuppetAgentLinuxIP3"
-          },
-          "RemoteAdminCIDR": {
-            "Ref": "RemoteAdminCIDR"
-          },
-          "QSS3BucketName": {
-            "Ref": "QSS3BucketName"
-          },
-          "QSS3KeyPrefix": {
-            "Ref": "QSS3KeyPrefix"
           }
         }
       }
