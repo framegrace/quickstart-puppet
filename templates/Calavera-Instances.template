@@ -1,0 +1,451 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Step 3 of 3: Create the Amazon EC2 instances for the Calav Quick Start.",
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
+            "default": "Security Configuration"
+          },
+          "Parameters": [
+            "KeyPairName",
+            "RemoteAdminCIDR"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Network Configuration"
+          },
+          "Parameters": [
+            "VPC",
+            "VPCCIDR",
+            "SubnetCIDR"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Calav Configuration"
+          },
+          "Parameters": [
+            "CalavDevelIP",
+            "CalavCaraIP",
+            "CalavHombrosIP",
+            "CalavEspinaIP"
+          ]
+        }
+      ],
+      "ParameterLabels": {
+        "KeyPairName": {
+          "default": "Select a key pair"
+        },
+        "RemoteAdminCIDR": {
+          "default": "Source IP for remote access"
+        },
+        "VPC": {
+          "default": "Select a VPC Name"
+        },
+        "VPCCIDR": {
+          "default": "CIDR Address for the VPC"
+        },
+        "SubnetCIDR": {
+          "default": "CIDR Address for the Subnet"
+        },
+        "CalavDevelIP": {
+          "default": "IP Address for Devel (manos,cerebro,brazos)"
+        },
+        "CalavCaraIP": {
+          "default": "IP Address for Cara (Prod)"
+        },
+        "CalavHombrosIP": {
+          "default": "IP Address for Hombros (Jenkins)"
+        },
+        "CalavEspinaIP": {
+          "default": "IP Address for Espina (Artifactory)"
+        }
+      }
+    }
+  },
+  "Parameters": {
+    "KeyPairName": {
+      "Description": "Public/private key pair",
+      "Type": "AWS::EC2::KeyPair::KeyName"
+    },
+    "SubnetId": {
+      "Description": "VPC subnet ID for EC2 Instances",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "VPC": {
+      "Description": "VPC ID",
+      "Type": "AWS::EC2::VPC::Id"
+    },
+    "RemoteAdminCIDR": {
+      "Description": "CIDR block or IP for SSH and RDP access Note: a value of 0.0.0.0/0 will allow access from ANY ip address",
+      "Type": "String",
+      "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+    },
+    "DNSZone": {
+      "Description": "DNS Subdomain",
+      "Type": "String",
+      "Default": "leansm.com"
+    },
+    "SubdomainName": {
+      "Description": "DNS Subdomain",
+      "Type": "String",
+      "Default": "curso"
+    },
+    "CalavDevelIP": {
+      "Description": "IP Address for Devel (manos,cerebro,brazos)",
+      "Type": "String",
+      "Default": "10.0.0.20"
+    },
+    "CalavCaraIP": {
+      "Description": "IP Address for Cara (Prod)",
+      "Type": "String",
+      "Default": "10.0.0.21"
+    },
+    "CalavHombrosIP": {
+      "Description": "IP Address for Hombros (Jenkins)",
+      "Type": "String",
+      "Default": "10.0.0.22"
+    },
+    "CalavEspinaIP": {
+      "Description": "IP Address for Espina (Artifactory)",
+      "Type": "String",
+      "Default": "10.0.0.23"
+    },
+    "VPCCIDR": {
+      "Description": "CIDR block for the VPC",
+      "Type": "String",
+      "Default": "10.0.0.0/16",
+      "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+    },
+    "QSS3BucketName": {
+      "Type": "String",
+      "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+      "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+      "Default": "quickstart-reference",
+      "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+    },
+    "QSS3KeyPrefix": {
+      "Type": "String",
+      "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+      "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+      "Default": "puppet/latest/",
+      "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
+    }
+  },
+  "Mappings": {
+    "AWSAMIRegionMap": {
+      "AMI": {
+        "US1404HVM": "ami-39de0944"
+      },
+      "us-east-1": {
+        "US1404HVM": "ami-39de0944"
+      }
+    }
+  },
+  "Conditions": {
+    "GovCloudCondition": {
+      "Fn::Equals": [
+        {
+          "Ref": "AWS::Region"
+        },
+        "us-gov-west-1"
+      ]
+    }
+  },
+  "Resources": {
+    "CalavHostRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:ListObject"
+                  ],
+                  "Resource": {
+                    "Fn::Sub": [
+                      "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
+                      {
+                        "Partition": {
+                          "Fn::If": [
+                            "GovCloudCondition",
+                            "aws-us-gov",
+                            "aws"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "Effect": "Allow"
+                }
+              ]
+            },
+            "PolicyName": "aws-quick-start-s3-policy"
+          }
+        ],
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sts:AssumeRole"
+              ],
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Effect": "Allow"
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "CalavHostProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "CalavHostRole"
+          }
+        ],
+        "Path": "/"
+      }
+    },
+    "CalavDevel": {
+      "Type": "AWS::EC2::Instance",
+      "Metadata": {
+        "AWS::CloudFormation::Authentication": {
+          "S3AccessCreds": {
+            "type": "S3",
+            "roleName": {
+              "Ref": "CalavHostRole"
+            },
+            "buckets": [
+              {
+                "Ref": "QSS3BucketName"
+              }
+            ]
+          }
+        },
+        "AWS::CloudFormation::Init": {
+          "config": {
+            "config": {
+              "files": {
+                "/etc/cfn/cfn-hup.conf": {
+                  "content": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource CalavDevel --region ${AWS::Region}"
+                        },
+                        "\n"
+                      ]
+                    ]
+                  },
+                  "mode": "000400",
+                  "user": "root",
+                  "group": "root"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Properties": {
+        "IamInstanceProfile": {
+          "Ref": "CalavHostProfile"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSAMIRegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "US1404HVM"
+          ]
+        },
+        "InstanceType": "t2.medium",
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "SubnetId"
+            },
+            "PrivateIpAddresses": [
+              {
+                "Primary": "true",
+                "PrivateIpAddress": {
+                  "Ref": "CalavDevelIP"
+                }
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "CalavDevelSecurityGroup"
+              }
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Sub": "Devel.${SubdomainName}"
+            }
+          }
+        ],
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": "10",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "KeyName": {
+          "Ref": "KeyPairName"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -e\n",
+                "export LC_ALL=C\n",
+                "export PATH=/usr/local/bin:$PATH\n",
+                {
+                  "Fn::Sub": "hostname manos.${SubdomainName}.${DNSZone}\n"
+                },
+                {
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
+                "apt-get update\n",
+                "apt-get install -y python-pip\n",
+                "pip install awscli\n",
+                "apt-get install -y libffi-dev libssl-dev\n",
+                "pip install --upgrade pip &> /dev/null\n",
+                "pip install pyopenssl ndg-httpsclient pyasn1\n",
+                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                {
+                  "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource CalavDevel --region ${AWS::Region}\n"
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "CalavDevelSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enables access to the Calav devel",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Ref": "RemoteAdminCIDR"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Ref": "VPCCIDR"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8140",
+            "ToPort": "8140",
+            "CidrIp": {
+              "Ref": "VPCCIDR"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {
+              "Ref": "VPCCIDR"
+            }
+          }
+        ]
+      }
+    },
+    "CalavManosPublicDNSRecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": "Z11P1VBPAOBP7C",
+        "Name": {
+          "Fn::Sub": "manos.${SubdomainName}.${DNSZone}"
+        },
+        "Type": "A",
+        "TTL": "900",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "CalavDevel",
+              "PublicIp"
+            ]
+          }
+        ]
+      }
+    },
+    "CalavCerebroPublicDNSRecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": "Z11P1VBPAOBP7C",
+        "Name": {
+          "Fn::Sub": "cerebro.${SubdomainName}.${DNSZone}"
+        },
+        "Type": "CNAME",
+        "TTL": "900",
+        "ResourceRecords": [{
+          "Fn::Sub": "manos.${SubdomainName}.${DNSZone}"
+         }]
+      }
+    },
+    "CalavBrazosPublicDNSRecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": "Z11P1VBPAOBP7C",
+        "Name": {
+          "Fn::Sub": "brazos.${SubdomainName}.${DNSZone}"
+        },
+        "Type": "CNAME",
+        "TTL": "900",
+        "ResourceRecords": [{
+          "Fn::Sub": "manos.${SubdomainName}.${DNSZone}"
+         }]
+      }
+    }
+  },
+  "Outputs": {
+    "CalavDevelDnsName": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CalavDevel",
+          "PublicDnsName"
+        ]
+      },
+      "Description": "Public DNS Name for the Calav Devel Server"
+    }
+  }
+}
