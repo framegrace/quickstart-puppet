@@ -501,18 +501,10 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "8140",
-            "ToPort": "8140",
-            "CidrIp": {
-              "Ref": "VPCCIDR"
-            }
-          },
-          {
-            "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
             "CidrIp": {
-              "Ref": "VPCCIDR"
+              "Ref": "RemoteAdminCIDR"
             }
           }
         ]
