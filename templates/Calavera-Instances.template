@@ -138,14 +138,14 @@
   "Mappings": {
     "AWSAMIRegionMap": {
       "AMI": {
-        "US1404HVM": "ami-2c508651",
-        "JENKINS": "ami-a78554da",
-        "ARTIF": "ami-d58756a8"
+        "US1404HVM": "ami-f225f58f",
+        "JENKINS": "ami-a427f7d9",
+        "ARTIF": "ami-293fef54"
       },
       "us-east-1": {
-        "US1404HVM": "ami-2c508651",
-        "JENKINS": "ami-a78554da",
-        "ARTIF": "ami-d58756a8"
+        "US1404HVM": "ami-f225f58f",
+        "JENKINS": "ami-a427f7d9",
+        "ARTIF": "ami-293fef54"
       }
     }
   },
@@ -333,6 +333,9 @@
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
+                {
+                  "Fn::Sub": "sed --in-place 's/XXXXXXXX/espina.${SubdomainName}.${DNSZone}/' /usr/bin/getlast.sh\n"
                 },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
@@ -590,6 +593,9 @@
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/XXXXXXXX/espina.${SubdomainName}.${DNSZone}/' /opt/bitnami/apps/jenkins/jenkins_home/org.jfrog.hudson.ArtifactoryBuilder.xml\n"
+                },
+                {
+                  "Fn::Sub": "sed --in-place 's/XXXXXXXX/espina.${SubdomainName}.${DNSZone}/' /usr/bin/getlast.sh\n"
                 },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
