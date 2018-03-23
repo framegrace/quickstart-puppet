@@ -350,6 +350,133 @@
         }
       }
     },
+    "CalavCara": {
+      "Type": "AWS::EC2::Instance",
+      "Metadata": {
+        "AWS::CloudFormation::Authentication": {
+          "S3AccessCreds": {
+            "type": "S3",
+            "roleName": {
+              "Ref": "CalavHostRole"
+            },
+            "buckets": [
+              {
+                "Ref": "QSS3BucketName"
+              }
+            ]
+          }
+        },
+        "AWS::CloudFormation::Init": {
+          "config": {
+            "config": {
+              "files": {
+                "/etc/cfn/cfn-hup.conf": {
+                  "content": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource CalavCara --region ${AWS::Region}"
+                        },
+                        "\n"
+                      ]
+                    ]
+                  },
+                  "mode": "000400",
+                  "user": "root",
+                  "group": "root"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Properties": {
+        "IamInstanceProfile": {
+          "Ref": "CalavHostProfile"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSAMIRegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "US1404HVM"
+          ]
+        },
+        "InstanceType": "t2.small",
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "SubnetId"
+            },
+            "PrivateIpAddresses": [
+              {
+                "Primary": "true",
+                "PrivateIpAddress": {
+                  "Ref": "CalavCaraIP"
+                }
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "CalavDevelSecurityGroup"
+              }
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Sub": "Cara.${SubdomainName}"
+            }
+          }
+        ],
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": "10",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "KeyName": {
+          "Ref": "KeyPairName"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -e\n",
+                "export LC_ALL=C\n",
+                "export PATH=/usr/local/bin:$PATH\n",
+                {
+                  "Fn::Sub": "hostname cara.${SubdomainName}.${DNSZone}\n"
+                },
+                {
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
+                "apt-get update\n",
+                "apt-get install -y python-pip\n",
+                "pip install awscli\n",
+                "apt-get install -y libffi-dev libssl-dev\n",
+                "pip install --upgrade pip &> /dev/null\n",
+                "pip install pyopenssl ndg-httpsclient pyasn1\n",
+                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                {
+                  "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource CalavCara --region ${AWS::Region}\n"
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
     "CalavHombros": {
       "Type": "AWS::EC2::Instance",
       "Metadata": {
