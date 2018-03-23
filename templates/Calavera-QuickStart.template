@@ -55,9 +55,24 @@
       "Default": "10.0.0.13"
     },
     "CalavDevelIP": {
-      "Description": "IP for the Linux Puppet agent",
+      "Description": "IP For calavera devel (manos,cerebro,brazos)",
       "Type": "String",
       "Default": "10.0.0.20"
+    },
+    "CalavCaraIP": {
+      "Description": "IP For calavera Cara (prod hijo)",
+      "Type": "String",
+      "Default": "10.0.0.21"
+    },
+    "CalavHombrosIP": {
+      "Description": "IP For calavera Hombros (Jenkins)",
+      "Type": "String",
+      "Default": "10.0.0.22"
+    },
+    "CalavEspinaIP": {
+      "Description": "IP For calavera Espina (Artifactory)",
+      "Type": "String",
+      "Default": "10.0.0.23"
     },
     "QSS3BucketName": {
       "Type": "String",
@@ -108,7 +123,10 @@
             "PuppetAgentLinuxIP1",
             "PuppetAgentLinuxIP2",
             "PuppetAgentLinuxIP3",
-            "CalavDevelIP"
+            "CalavDevelIP",
+            "CalavCaraIP",
+            "CalavHombrosIP",
+            "CalavEspinaIP"
           ]
         }
       ],
@@ -133,6 +151,15 @@
         },
         "CalavDevelIP": {
           "default": "IP address for Calavera Devel (>10.0.0.20) (manos,brazos,cerebro) :"
+        },
+        "CalavCaraIP": {
+          "default": "IP address for Calavera Cara (>10.0.0.20) (Prod) :"
+        },
+        "CalavHombrosIP": {
+          "default": "IP address for Calavera Hombros (>10.0.0.20) (Jenkins) :"
+        },
+        "CalavEspinaIP": {
+          "default": "IP address for Calavera Espina (>10.0.0.20) (Artifactory) :"
         },
         "QSS3BucketName": {
           "default": "Quick Start S3 Bucket Name:"
@@ -243,6 +270,15 @@
           },
           "CalavDevelIP" : {
             "Ref": "CalavDevelIP"
+          },
+          "CalavCaraIP" : {
+            "Ref": "CalavCaraIP"
+          },
+          "CalavHombrosIP" : {
+            "Ref": "CalavHombrosIP"
+          },
+          "CalavEspinaIP" : {
+            "Ref": "CalavEspinaIP"
           },
           "SubdomainName": {
             "Ref": "SubdomainName"
