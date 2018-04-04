@@ -138,12 +138,12 @@
   "Mappings": {
     "AWSAMIRegionMap": {
       "AMI": {
-        "US1404HVM": "ami-9be04ce6",
+        "US1404HVM": "ami-13fb576e",
         "JENKINS": "ami-aae448d7",
         "ARTIF": "ami-4709d33a"
       },
       "us-east-1": {
-        "US1404HVM": "ami-9be04ce6",
+        "US1404HVM": "ami-13fb576e",
         "JENKINS": "ami-aae448d7",
         "ARTIF": "ami-4709d33a"
       }
