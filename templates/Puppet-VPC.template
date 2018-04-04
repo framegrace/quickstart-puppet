@@ -386,7 +386,7 @@
                 "HostedZoneId": {
                     "Fn::Join": [ "", [ "/hostedzone/", { "Ref": "HostedZone" } ] ]
                 },
-                "Name": { "Fn::Join": [ ".", [ "hombros", { "Ref": "SubdomainName" }, { "Ref": "DNSZone" }, ] ]
+                "Name": { "Fn::Join": [ ".", [ "cara", { "Ref": "SubdomainName" }, { "Ref": "DNSZone" }, ] ]
                 },
                 "Type": "A",
                 "TTL": "900",
