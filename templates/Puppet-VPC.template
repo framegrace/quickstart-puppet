@@ -380,6 +380,19 @@
                 "ResourceRecords": [ { "Ref": "CalavHombrosIP" } ]
             }
         },
+        "CaraDevelDNSRecord": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneId": {
+                    "Fn::Join": [ "", [ "/hostedzone/", { "Ref": "HostedZone" } ] ]
+                },
+                "Name": { "Fn::Join": [ ".", [ "hombros", { "Ref": "SubdomainName" }, { "Ref": "DNSZone" }, ] ]
+                },
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [ { "Ref": "CalavCaraIP" } ]
+            }
+        },
         "EspinaDevelDNSRecord": {
             "Type": "AWS::Route53::RecordSet",
             "Properties": {

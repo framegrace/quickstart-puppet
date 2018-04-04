@@ -138,14 +138,14 @@
   "Mappings": {
     "AWSAMIRegionMap": {
       "AMI": {
-        "US1404HVM": "ami-5793492a",
-        "JENKINS": "ami-169f456b",
-        "ARTIF": "ami-de9c46a3"
+        "US1404HVM": "ami-b11eb3cc",
+        "JENKINS": "ami-991cb1e4",
+        "ARTIF": "ami-4709d33a"
       },
       "us-east-1": {
-        "US1404HVM": "ami-5793492a",
-        "JENKINS": "ami-169f456b",
-        "ARTIF": "ami-de9c46a3"
+        "US1404HVM": "ami-b11eb3cc",
+        "JENKINS": "ami-991cb1e4",
+        "ARTIF": "ami-4709d33a"
       }
     }
   },
@@ -333,9 +333,6 @@
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
-                },
-                {
-                  "Fn::Sub": "sed --in-place 's/XXXXXXXX/espina.${SubdomainName}.${DNSZone}/' /usr/bin/getlast.sh\n"
                 },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
@@ -590,12 +587,6 @@
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
-                },
-                {
-                  "Fn::Sub": "sed --in-place 's/XXXXXXXX/espina.${SubdomainName}.${DNSZone}/' /opt/bitnami/apps/jenkins/jenkins_home/org.jfrog.hudson.ArtifactoryBuilder.xml\n"
-                },
-                {
-                  "Fn::Sub": "sed --in-place 's/XXXXXXXX/espina.${SubdomainName}.${DNSZone}/' /usr/bin/getlast.sh\n"
                 },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
@@ -858,6 +849,25 @@
         "ResourceRecords": [{
           "Fn::Sub": "manos.${SubdomainName}.${DNSZone}"
          }]
+      }
+    },
+    "CalavCaraPublicDNSRecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": "Z11P1VBPAOBP7C",
+        "Name": {
+          "Fn::Sub": "cara.${SubdomainName}.${DNSZone}"
+        },
+        "Type": "A",
+        "TTL": "900",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "CalavCara",
+              "PublicIp"
+            ]
+          }
+        ]
       }
     }
   },
