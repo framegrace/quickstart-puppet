@@ -184,7 +184,7 @@
         "WS2012R2": "ami-b61258da"
       },
       "us-east-1": {
-        "US1404HVM": "ami-9ac624e7",
+        "US1404HVM": "ami-bba60ac6",
         "WS2012R2": "ami-c951acb4"
       },
       "us-east-2": {
@@ -412,10 +412,10 @@
                 "apt-get install puppetmaster-passenger -y\n",
                 "sed --in-place '/templatedir/ d' /etc/puppet/puppet.conf\n",
                 {
-                  "Fn::Sub": "echo 'linuxagent1.${SubdomainName}.${DNSZone}' > /etc/puppet/autosign.conf\n"
+                  "Fn::Sub": "echo 'puppet1.${SubdomainName}.${DNSZone}' > /etc/puppet/autosign.conf\n"
                 },
                 {
-                  "Fn::Sub": "echo 'linuxagent2.${SubdomainName}.${DNSZone}' >> /etc/puppet/autosign.conf\n"
+                  "Fn::Sub": "echo 'puppet2.${SubdomainName}.${DNSZone}' >> /etc/puppet/autosign.conf\n"
                 },
                 {
                   "Fn::Sub": "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/site.pp /etc/puppet/manifests/site.pp --region ${AWS::Region}\n"
@@ -502,7 +502,7 @@
                 "export PATH=/usr/local/bin:$PATH\n",
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
-                  "Fn::Sub": "hostname linuxagent1.${SubdomainName}.${DNSZone}\n"
+                  "Fn::Sub": "hostname puppet1.${SubdomainName}.${DNSZone}\n"
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
@@ -579,7 +579,7 @@
                 "export PATH=/usr/local/bin:$PATH\n",
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
-                  "Fn::Sub": "hostname linuxagent2.${SubdomainName}.${DNSZone}\n"
+                  "Fn::Sub": "hostname puppet2.${SubdomainName}.${DNSZone}\n"
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
@@ -656,7 +656,7 @@
                 "export PATH=/usr/local/bin:$PATH\n",
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
-                  "Fn::Sub": "hostname linuxagent2.${SubdomainName}.${DNSZone}\n"
+                  "Fn::Sub": "hostname puppet3.${SubdomainName}.${DNSZone}\n"
                 },
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
@@ -808,7 +808,7 @@
       "Properties": {
         "HostedZoneId": "Z11P1VBPAOBP7C",
         "Name": {
-          "Fn::Sub": "linuxagent1.${SubdomainName}.${DNSZone}"
+          "Fn::Sub": "puppet1.${SubdomainName}.${DNSZone}"
         },
         "Type": "A",
         "TTL": "900",
@@ -827,7 +827,7 @@
       "Properties": {
         "HostedZoneId": "Z11P1VBPAOBP7C",
         "Name": {
-          "Fn::Sub": "linuxagent2.${SubdomainName}.${DNSZone}"
+          "Fn::Sub": "puppet2.${SubdomainName}.${DNSZone}"
         },
         "Type": "A",
         "TTL": "900",
@@ -846,7 +846,7 @@
       "Properties": {
         "HostedZoneId": "Z11P1VBPAOBP7C",
         "Name": {
-          "Fn::Sub": "linuxagent3.${SubdomainName}.${DNSZone}"
+          "Fn::Sub": "puppet3.${SubdomainName}.${DNSZone}"
         },
         "Type": "A",
         "TTL": "900",

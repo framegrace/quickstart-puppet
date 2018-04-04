@@ -275,7 +275,7 @@
                 "Name": { "Fn::Join": [
                            ".",
                            [
-                           "linuxagent1",
+                           "puppet1",
                            { "Ref": "SubdomainName" },
                            { "Ref": "DNSZone" },
                            ]
@@ -307,7 +307,7 @@
                 "Name": { "Fn::Join": [
                            ".",
                            [
-                           "linuxagent2",
+                           "puppet2",
                            { "Ref": "SubdomainName" },
                            { "Ref": "DNSZone" },
                            ]
@@ -339,7 +339,7 @@
                 "Name": { "Fn::Join": [
                            ".",
                            [
-                           "linuxagent3",
+                           "puppet3",
                            { "Ref": "SubdomainName" },
                            { "Ref": "DNSZone" },
                            ]

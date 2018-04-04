@@ -279,63 +279,6 @@
           }
         }
       }
-    },
-    "CalaveraInstanceStack": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": {
-          "Fn::Sub": [
-            "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/Calavera-Instances.template",
-            {
-              "QSS3Region": {
-                "Fn::If": [
-                  "GovCloudCondition",
-                  "s3-us-gov-west-1",
-                  "s3"
-                ]
-              }
-            }
-          ]
-        },
-        "Parameters": {
-          "KeyPairName": {
-            "Ref": "KeyPairName"
-          },
-          "SubnetId": {
-            "Fn::GetAtt": [
-              "VPCStack",
-              "Outputs.SubnetId"
-            ]
-          },
-          "VPC": {
-            "Fn::GetAtt": [
-              "VPCStack",
-              "Outputs.VPC"
-            ]
-          },
-          "VPCCIDR": {
-            "Ref": "VPCCIDR"
-          },
-          "DNSZone": {
-            "Ref": "DNSZone"
-          },
-          "CalavDevelIP" : {
-            "Ref": "CalavDevelIP"
-          },
-          "SubdomainName": {
-            "Ref": "SubdomainName"
-          },
-          "RemoteAdminCIDR": {
-            "Ref": "RemoteAdminCIDR"
-          },
-          "QSS3BucketName": {
-            "Ref": "QSS3BucketName"
-          },
-          "QSS3KeyPrefix": {
-            "Ref": "QSS3KeyPrefix"
-          }
-        }
-      }
     }
   }
 }
