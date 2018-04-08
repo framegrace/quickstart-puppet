@@ -243,7 +243,7 @@
                 "Name": { "Fn::Join": [
                            ".",
                            [
-                           "puppet",
+                           "puppetmaster",
                            { "Ref": "SubdomainName" },
                            { "Ref": "DNSZone" },
                            ]

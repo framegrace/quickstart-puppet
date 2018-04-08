@@ -184,7 +184,7 @@
         "WS2012R2": "ami-b61258da"
       },
       "us-east-1": {
-        "US1404HVM": "ami-bba60ac6",
+        "US1404HVM": "ami-8cbb17f1",
         "WS2012R2": "ami-c951acb4"
       },
       "us-east-2": {
@@ -392,22 +392,28 @@
               "",
               [
                 "#!/bin/bash -e\n",
+                "set -x\n",
                 "export LC_ALL=C\n",
                 "export PATH=/usr/local/bin:$PATH\n",
                 {
-                  "Fn::Sub": "hostname puppet.${SubdomainName}.${DNSZone}\n"
-                },
-                { 
-                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                  "Fn::Sub": "hostname puppetmaster.${SubdomainName}.${DNSZone}\n"
                 },
                 "apt-get update\n",
                 "apt-get install -y python-pip\n",
                 "pip install awscli\n",
                 "apt-get install -y libffi-dev libssl-dev\n",
-                "wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/puppetlabs-release-trusty.deb\n",
                 "pip install --upgrade pip &> /dev/null\n",
                 "pip install pyopenssl ndg-httpsclient pyasn1\n",
-                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                {
+                 "Fn::Sub": "easy_install https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/aws-cfn-bootstrap-latest.tar.gz\n"
+                },
+                {
+                  "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource PuppetMaster --region ${AWS::Region}\n"
+                },
+                { 
+                  "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
+                },
+                "wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/puppetlabs-release-trusty.deb\n",
                 "dpkg -i /tmp/puppetlabs-release-trusty.deb\n",
                 "apt-get install puppetmaster-passenger -y\n",
                 "sed --in-place '/templatedir/ d' /etc/puppet/puppet.conf\n",
@@ -420,9 +426,6 @@
                 {
                   "Fn::Sub": "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/site.pp /etc/puppet/manifests/site.pp --region ${AWS::Region}\n"
                 },
-                {
-                  "Fn::Sub": "sed --in-place 's/XXXX/${SubdomainName}.${DNSZone}/' /etc/puppet/manifests/site.pp\n"
-                },
                 "mkdir -p /etc/puppet/modules/lampserver/manifests\n",
                 "mkdir -p /etc/puppet/modules/iisserver/manifests\n",
                 "puppet module install puppetlabs-powershell\n",
@@ -432,9 +435,6 @@
                 },
                 {
                   "Fn::Sub": "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/iisserver/init.pp /etc/puppet/modules/iisserver/manifests/init.pp --region ${AWS::Region}\n"
-                },
-                {
-                  "Fn::Sub": "/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource PuppetMaster --region ${AWS::Region}\n"
                 },
                 {
                   "Fn::Sub": "/usr/local/bin/cfn-signal -e $? '${PuppetWaitConditionHandle}'\n"
@@ -498,21 +498,25 @@
               "",
               [
                 "#!/bin/bash -e\n",
+                "set -x\n",
                 "export LC_ALL=C\n",
                 "export PATH=/usr/local/bin:$PATH\n",
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
                   "Fn::Sub": "hostname puppet1.${SubdomainName}.${DNSZone}\n"
                 },
+                "apt-get update\n",
+                "apt-get install -y python-pip\n",
+                {
+                 "Fn::Sub": "easy_install https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/aws-cfn-bootstrap-latest.tar.gz\n"
+                },
+                "apt-get install puppet -y\n",
+                "/etc/init.d/puppet stop\n",
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
                 },
-                "apt-get update\n",
-                "apt-get install -y python-pip\n",
-                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
-                "apt-get install puppet -y\n",
                 {
-                  "Fn::Sub": "sed -i '/main/aserver=puppet.${SubdomainName}.${DNSZone}' /etc/puppet/puppet.conf\n"
+                  "Fn::Sub": "sed -i '/main/aserver=puppetmaster.${SubdomainName}.${DNSZone}' /etc/puppet/puppet.conf\n"
                 },
                 "puppet agent --enable\n",
                 "puppet agent --test --verbose\n"
@@ -575,21 +579,25 @@
               "",
               [
                 "#!/bin/bash -e\n",
+                "set -x\n",
                 "export LC_ALL=C\n",
                 "export PATH=/usr/local/bin:$PATH\n",
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
                   "Fn::Sub": "hostname puppet2.${SubdomainName}.${DNSZone}\n"
                 },
+                "apt-get update\n",
+                "apt-get install -y python-pip\n",
+                {
+                 "Fn::Sub": "easy_install https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/aws-cfn-bootstrap-latest.tar.gz\n"
+                },
+                "apt-get install puppet -y\n",
+                "/etc/init.d/puppet stop\n",
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
                 },
-                "apt-get update\n",
-                "apt-get install -y python-pip\n",
-                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
-                "apt-get install puppet -y\n",
                 {
-                  "Fn::Sub": "sed -i '/main/aserver=puppet.${SubdomainName}.${DNSZone}' /etc/puppet/puppet.conf\n"
+                  "Fn::Sub": "sed -i '/main/aserver=puppetmaster.${SubdomainName}.${DNSZone}' /etc/puppet/puppet.conf\n"
                 },
                 "puppet agent --enable\n",
                 "puppet agent --test --verbose\n"
@@ -652,19 +660,24 @@
               "",
               [
                 "#!/bin/bash -e\n",
+                "set -x\n",
                 "export LC_ALL=C\n",
                 "export PATH=/usr/local/bin:$PATH\n",
                 "sed -i 's/.*DPkg/#&/' /etc/apt/apt.conf.d/70debconf\n",
                 {
                   "Fn::Sub": "hostname puppet3.${SubdomainName}.${DNSZone}\n"
                 },
+                "apt-get update\n",
+                "apt-get install -y python-pip\n",
+                "#easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+                {
+                 "Fn::Sub": "easy_install https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/aws-cfn-bootstrap-latest.tar.gz\n"
+                },
+                "apt-get install puppet -y\n",
+                "/etc/init.d/puppet stop\n",
                 {
                   "Fn::Sub": "sed --in-place 's/^search .*/search ${SubdomainName}.${DNSZone} ec2.internal/' /etc/resolv.conf\n"
                 },
-                "apt-get update\n",
-                "apt-get install -y python-pip\n",
-                "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
-                "apt-get install puppet -y\n"
               ]
             ]
           }
